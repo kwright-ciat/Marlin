@@ -456,8 +456,10 @@
 #define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #define PID_K1 0.95      // Smoothing factor within any PID loop
 #if ENABLED(PIDTEMP)
+  //#define MIN_POWER 0
   #define PID_EDIT_MENU           // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
   #define PID_AUTOTUNE_MENU       // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
+
   //#define PID_DEBUG             // Sends debug data to the serial port.
   //#define PID_OPENLOOP 1        // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
   //#define SLOW_PWM_HEATERS      // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
@@ -519,7 +521,7 @@
 #define MAX_BED_POWER 255 // limits duty cycle to bed; 255=full current
 
 #if ENABLED(PIDTEMPBED)
-
+  //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
@@ -1690,6 +1692,14 @@
 //#define REVERSE_MENU_DIRECTION
 
 //
+// This option reverses the encoder direction for Select Screen.
+//
+//  If CLOCKWISE normally moves LEFT this makes it go RIGHT.
+//  If CLOCKWISE normally moves RIGHT this makes it go LEFT.
+//
+//#define REVERSE_SELECT_DIRECTION
+
+//
 // Individual Axis Homing
 //
 // Add individual axis homing items (Home X, Home Y, and Home Z) to the LCD menu.
@@ -2029,15 +2039,16 @@
 //=============================================================================
 
 //
-// MKS Robin 320x240 color display
+// FSMC display (MKS Robin, Alfawise U20, JGAurora A5S, A1, etc.)
 //
-//#define MKS_ROBIN_TFT
+//#define FSMC_GRAPHICAL_TFT
 
 //=============================================================================
 //============================  Other Controllers  ============================
 //=============================================================================
 
 //
+// ADS7843/XPT2046 ADC Touchscreen such as ILI9341 2.8
 // CONTROLLER TYPE: Keypad / Add-on
 //
 
