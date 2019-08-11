@@ -27,7 +27,7 @@ M109 S{material_print_temperature_layer_0} ; wait for temperatures
 M190 S{material_bed_temperature_layer_0} 
 M117 Done heating
 
-M851 Z-1.55 ; Set z probe offset
+M851 Z-1.75 ; Set z probe offset
 
 M117 Homing
 G28 ; Home all axes

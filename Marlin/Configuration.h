@@ -471,9 +471,11 @@
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
   // Creality Ender-3
-  #define DEFAULT_Kp 21.73
-  #define DEFAULT_Ki 1.54
-  #define DEFAULT_Kd 76.55
+
+  // Updated from PID tune after changing to micro-swiss hot-end
+  #define DEFAULT_Kp 31.65
+  #define DEFAULT_Ki 3.49
+  #define DEFAULT_Kd 71.67
 
   // Ultimaker
   //#define DEFAULT_Kp 22.2
@@ -1043,7 +1045,7 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 225
+#define X_BED_SIZE 215
 #define Y_BED_SIZE 225
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
@@ -1080,7 +1082,7 @@
 #endif
 
 #if EITHER(MIN_SOFTWARE_ENDSTOPS, MAX_SOFTWARE_ENDSTOPS)
-  //#define SOFT_ENDSTOPS_MENU_ITEM  // Enable/Disable software endstops from the LCD
+  #define SOFT_ENDSTOPS_MENU_ITEM  // Enable/Disable software endstops from the LCD
 #endif
 
 /**
