@@ -27,8 +27,8 @@ M109 S{material_print_temperature_layer_0} ; wait for temperatures
 M190 S{material_bed_temperature_layer_0} 
 M117 Done heating
 
-M851 Z-1.75 ; Set z probe offset
-
+M851 Z-1.75 ; Set z probe offset - this could be -0.8 for extra first layer squash if needed
+G900 K0.9 ; Set linear advance K value
 M117 Homing
 G28 ; Home all axes
 M117 Probing
