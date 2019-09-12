@@ -21,20 +21,25 @@ BLTouch setup
 
 ```
 M117 Heating
-M140 S{material_bed_temperature_layer_0} ; set temperatures
+M140 S{material_bed_temperature_layer_0}
 M104 S{material_print_temperature_layer_0}
-M109 S{material_print_temperature_layer_0} ; wait for temperatures
-M190 S{material_bed_temperature_layer_0} 
+M109 S{material_print_temperature_layer_0}
+M190 S{material_bed_temperature_layer_0}
 M117 Done heating
 
-M851 Z-1.75 ; Set z probe offset - this could be -0.8 for extra first layer squash if needed
-G900 K0.9 ; Set linear advance K value
+M569 S0 E ; Disable stealthchop for extruder
+
+M851 Z{material_z_offset} ; Set z probe offset, -0.66
+M900 K{material_linear_advance_factor} ; Set linear advance K value, 0.07
+M205 J0.06 ; Set junction deviation
+
 M117 Homing
 G28 ; Home all axes
 M117 Probing
 G29 ; Auto bed-level (BL-Touch)
 
 M117 Purging
+G90 ; Absolute positioning
 G92 E0 ; Reset Extruder
 G1 Z10.0 F3000 ; move z up little to prevent scratching of surface
 G1 X0.1 Y20 Z0.3 F5000.0 ; move to start-line position
