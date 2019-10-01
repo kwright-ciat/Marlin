@@ -43,7 +43,7 @@
   #include "../../module/temperature.h"
 #endif
 
-#ifdef FILAMENT_RUNOUT_DISTANCE_MM
+#if ENABLED(FILAMENT_RUNOUT_SENSOR) && FILAMENT_RUNOUT_DISTANCE_MM
   #include "../../feature/runout.h"
   float lcd_runout_distance_mm;
 #endif
@@ -55,7 +55,7 @@ void menu_backlash();
 
   #include "../../feature/dac/stepper_dac.h"
 
-  uint8_t driverPercent[XYZE];
+  xyze_uint8_t driverPercent;
   inline void dac_driver_getValues() { LOOP_XYZE(i) driverPercent[i] = dac_current_get_percent((AxisEnum)i); }
   static void dac_driver_commit() { dac_current_set_percents(driverPercent); }
 
@@ -178,7 +178,7 @@ void menu_backlash();
 
       #if EXTRUDERS == 1
         MENU_MULTIPLIER_ITEM_EDIT(float3, MSG_FILAMENT_UNLOAD, &fc_settings[0].unload_length, 0, extrude_maxlength);
-      #else // EXTRUDERS > 1
+      #elif EXTRUDERS > 1
         #define EDIT_FIL_UNLOAD(N) MENU_MULTIPLIER_ITEM_EDIT(float3, MSG_FILAMENT_UNLOAD MSG_DIAM_E##N, &fc_settings[N-1].unload_length, 0, extrude_maxlength)
         MENU_MULTIPLIER_ITEM_EDIT(float3, MSG_FILAMENT_UNLOAD, &fc_settings[active_extruder].unload_length, 0, extrude_maxlength);
         EDIT_FIL_UNLOAD(1);
@@ -199,7 +199,7 @@ void menu_backlash();
 
       #if EXTRUDERS == 1
         MENU_MULTIPLIER_ITEM_EDIT(float3, MSG_FILAMENT_LOAD, &fc_settings[0].load_length, 0, extrude_maxlength);
-      #else // EXTRUDERS > 1
+      #elif EXTRUDERS > 1
         #define EDIT_FIL_LOAD(N) MENU_MULTIPLIER_ITEM_EDIT(float3, MSG_FILAMENT_LOAD MSG_DIAM_E##N, &fc_settings[N-1].load_length, 0, extrude_maxlength)
         MENU_MULTIPLIER_ITEM_EDIT(float3, MSG_FILAMENT_LOAD, &fc_settings[active_extruder].load_length, 0, extrude_maxlength);
         EDIT_FIL_LOAD(1);
@@ -219,7 +219,7 @@ void menu_backlash();
       #endif // EXTRUDERS > 1
     #endif
 
-    #ifdef FILAMENT_RUNOUT_DISTANCE_MM
+    #if ENABLED(FILAMENT_RUNOUT_SENSOR) && FILAMENT_RUNOUT_DISTANCE_MM
       MENU_ITEM_EDIT_CALLBACK(float3, MSG_RUNOUT_DISTANCE_MM, &lcd_runout_distance_mm, 1, 30, []{
         runout.set_runout_distance(lcd_runout_distance_mm);
       });
@@ -552,7 +552,7 @@ void menu_backlash();
       #if ENABLED(DELTA)
         EDIT_JERK(C);
       #else
-        MENU_MULTIPLIER_ITEM_EDIT(float52sign, MSG_VC_JERK, &planner.max_jerk[C_AXIS], 0.1f, 990);
+        MENU_MULTIPLIER_ITEM_EDIT(float52sign, MSG_VC_JERK, &planner.max_jerk.c, 0.1f, 990);
       #endif
       #if !BOTH(JUNCTION_DEVIATION, LIN_ADVANCE)
         EDIT_JERK(E);
@@ -620,7 +620,7 @@ void menu_backlash();
 #endif // !SLIM_LCD_MENUS
 
 void menu_advanced_settings() {
-  #ifdef FILAMENT_RUNOUT_DISTANCE_MM
+  #if ENABLED(FILAMENT_RUNOUT_SENSOR) && FILAMENT_RUNOUT_DISTANCE_MM
     lcd_runout_distance_mm = runout.runout_distance();
   #endif
   START_MENU();

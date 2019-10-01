@@ -90,13 +90,12 @@
     typedef void (*menuAction_t)();
 
     // Manual Movement
-    constexpr float manual_feedrate_mm_m[XYZE] = MANUAL_FEEDRATE;
     extern float move_menu_scale;
 
     #if ENABLED(ADVANCED_PAUSE_FEATURE)
       void lcd_pause_show_message(const PauseMessage message,
-                                           const PauseMode mode=PAUSE_MODE_SAME,
-                                           const uint8_t extruder=active_extruder);
+                                  const PauseMode mode=PAUSE_MODE_SAME,
+                                  const uint8_t extruder=active_extruder);
     #endif
 
     #if ENABLED(AUTO_BED_LEVELING_UBL)
@@ -215,7 +214,7 @@
 
 #endif
 
-#if BUTTON_EXISTS(BACK)
+#if BUTTON_EXISTS(BACK) || ENABLED(TOUCH_BUTTONS)
   #define BLEN_D 3
   #define EN_D _BV(BLEN_D)
   #define LCD_BACK_CLICKED() (buttons & EN_D)
@@ -274,7 +273,7 @@ public:
 
     static void init();
     static void update();
-    static void set_alert_status_P(PGM_P message);
+    static void set_alert_status_P(PGM_P const message);
 
     static char status_message[];
     static bool has_status();
@@ -306,6 +305,8 @@ public:
 
     #if HAS_SPI_LCD
 
+      static millis_t next_button_update_ms;
+
       static bool detected();
 
       static LCDViewAction lcdDrawUpdate;
@@ -319,7 +320,7 @@ public:
       #endif
 
       #if ENABLED(SHOW_BOOTSCREEN)
-        static void draw_marlin_bootscreen();
+        static void draw_marlin_bootscreen(const bool line2=false);
         static void show_marlin_bootscreen();
         static void show_bootscreen();
       #endif
@@ -340,7 +341,7 @@ public:
           static millis_t progress_bar_ms;  // Start time for the current progress bar cycle
           static void draw_progress_bar(const uint8_t percent);
           #if PROGRESS_MSG_EXPIRE > 0
-            static millis_t MarlinUI::expire_status_ms; // = 0
+            static millis_t expire_status_ms; // = 0
             static inline void reset_progress_bar_timeout() { expire_status_ms = 0; }
           #endif
         #endif
@@ -392,10 +393,10 @@ public:
     static inline void update() {}
     static inline void refresh() {}
     static inline void return_to_status() {}
-    static inline void set_alert_status_P(PGM_P message) { UNUSED(message); }
-    static inline void set_status(const char* const message, const bool persist=false) { UNUSED(message); UNUSED(persist); }
-    static inline void set_status_P(PGM_P const message, const int8_t level=0) { UNUSED(message); UNUSED(level); }
-    static inline void status_printf_P(const uint8_t level, PGM_P const fmt, ...) { UNUSED(level); UNUSED(fmt); }
+    static inline void set_alert_status_P(PGM_P const) {}
+    static inline void set_status(const char* const, const bool=false) {}
+    static inline void set_status_P(PGM_P const, const int8_t=0) {}
+    static inline void status_printf_P(const uint8_t, PGM_P const, ...) {}
     static inline void reset_status() {}
     static inline void reset_alert_level() {}
     static constexpr bool has_status() { return false; }
@@ -403,6 +404,10 @@ public:
   #endif
 
   #if HAS_LCD_MENU
+
+    #if ENABLED(TOUCH_BUTTONS)
+      static uint8_t repeat_delay;
+    #endif
 
     #if ENABLED(ENCODER_RATE_MULTIPLIER)
       static bool encoderRateMultiplierEnabled;
@@ -530,10 +535,6 @@ public:
     #if HAS_SLOW_BUTTONS
       static volatile uint8_t slow_buttons;
       static uint8_t read_slow_buttons();
-    #endif
-    #if ENABLED(TOUCH_BUTTONS)
-      static volatile uint8_t touch_buttons;
-      static uint8_t read_touch_buttons();
     #endif
 
     static void update_buttons();
